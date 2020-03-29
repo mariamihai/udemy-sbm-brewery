@@ -1,10 +1,14 @@
 package guru.springframework.sbmbrewery.services;
 
 import guru.springframework.sbmbrewery.web.model.BeerDto;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class BeerServiceImpl implements BeerService {
 
@@ -27,5 +31,10 @@ public class BeerServiceImpl implements BeerService {
     @Override
     public void update(UUID beerId, BeerDto beerDto) {
         // TODO - to be implemented
+    }
+
+    @Override
+    public void deleteById(UUID beerId) {
+        log.debug("Deleting beer.");
     }
 }
