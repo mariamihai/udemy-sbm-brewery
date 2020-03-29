@@ -5,7 +5,6 @@ import guru.springframework.sbmbrewery.web.model.BeerDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -27,7 +26,7 @@ public class BeerController {
     }
 
     @PostMapping
-    public ResponseEntity handlePost(BeerDto beerDto) {
+    public ResponseEntity handlePost(@RequestBody BeerDto beerDto) {
         BeerDto savedBeer = beerService.saveNewBeer(beerDto);
 
         HttpHeaders headers = new HttpHeaders();
@@ -38,7 +37,7 @@ public class BeerController {
     }
 
     @PutMapping("/{beerId}")
-    public ResponseEntity handleUpdate(@PathVariable("beerId") UUID beerId, BeerDto beerDto) {
+    public ResponseEntity handleUpdate(@PathVariable("beerId") UUID beerId, @RequestBody BeerDto beerDto) {
         beerService.update(beerId, beerDto);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
