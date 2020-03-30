@@ -1,8 +1,8 @@
 package guru.springframework.sbmbrewery.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import guru.springframework.sbmbrewery.services.BeerService;
-import guru.springframework.sbmbrewery.web.model.BeerDto;
+import guru.springframework.sbmbrewery.services.CustomerService;
+import guru.springframework.sbmbrewery.web.model.CustomerDto;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,59 +28,57 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(BeerController.class)
-public class BeerControllerTest {
+@WebMvcTest(CustomerController.class)
+public class CustomerControllerTest {
 
     @MockBean
-    BeerService beerService;
+    CustomerService customerService;
 
     @Autowired
     MockMvc mockMvc;
 
+    @InjectMocks
+    CustomerController classUnderTest;
+
     @Autowired
     ObjectMapper objectMapper;
 
-    @InjectMocks
-    BeerController classUnderTest;
+    CustomerDto customer;
 
-    BeerDto beer;
-
-    private final static String BEER_URI = "/api/v1/beer";
+    private final static String CUSTOMER_URI = "/api/v1/customer";
 
     @Before
     public void setUp() {
-        beer = BeerDto.builder()
+        customer = CustomerDto.builder()
                 .id(UUID.randomUUID())
-                .beerName("Beer")
-                .beerStyle("Type")
-                .upc(1234567890L)
+                .customerName("Name")
                 .build();
     }
 
     @Test
-    public void test_getBeer() throws Exception {
-        when(beerService.getBeerById(any(UUID.class))).thenReturn(beer);
+    public void test_getCustomer() throws Exception {
+        when(customerService.getCustomerById(any(UUID.class))).thenReturn(customer);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(BEER_URI + "/" + beer.getId()).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(beer.getId().toString())))
-                .andExpect(jsonPath("$.beerName", is("Beer")));
+        mockMvc.perform(MockMvcRequestBuilders.get(CUSTOMER_URI + "/" + customer.getId().toString()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.id", is(customer.getId().toString())))
+            .andExpect(jsonPath("$.customerName", is("Name")));
     }
 
     @Test
     public void test_handlePost() throws Exception {
-        String beerDtoJson = objectMapper.writeValueAsString(beer);
+        String customerDtoJson = objectMapper.writeValueAsString(customer);
 
-        when(beerService.saveNewBeer(any(BeerDto.class))).thenReturn(beer);
+        when(customerService.saveNewCustomer(any(CustomerDto.class))).thenReturn(customer);
 
-        mockMvc.perform(MockMvcRequestBuilders.post(BEER_URI).content(beerDtoJson).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.post(CUSTOMER_URI).content(customerDtoJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
 
     @Test
     public void test_handlePost_RequestBody() throws NoSuchMethodException {
-        Method handlePost = classUnderTest.getClass().getDeclaredMethod("handlePost", BeerDto.class);
+        Method handlePost = classUnderTest.getClass().getDeclaredMethod("handlePost", CustomerDto.class);
         Annotation[][] parameterAnnotations = handlePost.getParameterAnnotations();
         RequestBody annotation = (RequestBody) parameterAnnotations[0][0];
         Assert.assertNotNull(annotation);
@@ -88,19 +86,19 @@ public class BeerControllerTest {
 
     @Test
     public void test_handleUpdate() throws Exception {
-        String beerDtoJson = objectMapper.writeValueAsString(beer);
+        String customerDtoJson = objectMapper.writeValueAsString(customer);
 
-        doNothing().when(beerService).update(any(UUID.class), any(BeerDto.class));
+        doNothing().when(customerService).update(any(UUID.class), any(CustomerDto.class));
 
-        mockMvc.perform(MockMvcRequestBuilders.put(BEER_URI + "/" + beer.getId())
+        mockMvc.perform(MockMvcRequestBuilders.put(CUSTOMER_URI + "/" + customer.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(beerDtoJson))
+                .content(customerDtoJson))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     public void test_handleUpdate_RequestBody() throws NoSuchMethodException {
-        Method handleUpdate = classUnderTest.getClass().getDeclaredMethod("handleUpdate", UUID.class, BeerDto.class);
+        Method handleUpdate = classUnderTest.getClass().getDeclaredMethod("handleUpdate", UUID.class, CustomerDto.class);
         Annotation[][] parameterAnnotations = handleUpdate.getParameterAnnotations();
         RequestBody annotation = (RequestBody) parameterAnnotations[1][0];
         Assert.assertNotNull(annotation);
@@ -108,9 +106,9 @@ public class BeerControllerTest {
 
     @Test
     public void test_deleteBeer() throws Exception {
-        doNothing().when(beerService).update(any(UUID.class), any(BeerDto.class));
+        doNothing().when(customerService).update(any(UUID.class), any(CustomerDto.class));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(BEER_URI + "/" + beer.getId()).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.delete(CUSTOMER_URI + "/" + customer.getId()).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
 }
