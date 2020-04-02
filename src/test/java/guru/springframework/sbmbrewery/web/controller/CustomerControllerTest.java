@@ -80,7 +80,7 @@ public class CustomerControllerTest {
     public void test_handlePost_RequestBody() throws NoSuchMethodException {
         Method handlePost = classUnderTest.getClass().getDeclaredMethod("handlePost", CustomerDto.class);
         Annotation[][] parameterAnnotations = handlePost.getParameterAnnotations();
-        RequestBody annotation = (RequestBody) parameterAnnotations[0][0];
+        RequestBody annotation = (RequestBody) parameterAnnotations[0][1];
         Assert.assertNotNull(annotation);
     }
 
@@ -100,7 +100,7 @@ public class CustomerControllerTest {
     public void test_handleUpdate_RequestBody() throws NoSuchMethodException {
         Method handleUpdate = classUnderTest.getClass().getDeclaredMethod("handleUpdate", UUID.class, CustomerDto.class);
         Annotation[][] parameterAnnotations = handleUpdate.getParameterAnnotations();
-        RequestBody annotation = (RequestBody) parameterAnnotations[1][0];
+        RequestBody annotation = (RequestBody) parameterAnnotations[1][1];
         Assert.assertNotNull(annotation);
     }
 
