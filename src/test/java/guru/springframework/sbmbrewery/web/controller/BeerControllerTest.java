@@ -44,6 +44,7 @@ public class BeerControllerTest {
     BeerController classUnderTest;
 
     BeerDto beer;
+    BeerDto sentBeer;
 
     private final static String BEER_URI = "/api/v1/beer";
 
@@ -51,6 +52,12 @@ public class BeerControllerTest {
     public void setUp() {
         beer = BeerDto.builder()
                 .id(UUID.randomUUID())
+                .beerName("Beer")
+                .beerStyle("Type")
+                .upc(1234567890L)
+                .build();
+
+        sentBeer = BeerDto.builder()
                 .beerName("Beer")
                 .beerStyle("Type")
                 .upc(1234567890L)
@@ -70,7 +77,7 @@ public class BeerControllerTest {
 
     @Test
     public void test_handlePost() throws Exception {
-        String beerDtoJson = objectMapper.writeValueAsString(beer);
+        String beerDtoJson = objectMapper.writeValueAsString(sentBeer);
 
         when(beerService.saveNewBeer(any(BeerDto.class))).thenReturn(beer);
 
@@ -82,13 +89,13 @@ public class BeerControllerTest {
     public void test_handlePost_RequestBody() throws NoSuchMethodException {
         Method handlePost = classUnderTest.getClass().getDeclaredMethod("handlePost", BeerDto.class);
         Annotation[][] parameterAnnotations = handlePost.getParameterAnnotations();
-        RequestBody annotation = (RequestBody) parameterAnnotations[0][0];
+        RequestBody annotation = (RequestBody) parameterAnnotations[0][1];
         Assert.assertNotNull(annotation);
     }
 
     @Test
     public void test_handleUpdate() throws Exception {
-        String beerDtoJson = objectMapper.writeValueAsString(beer);
+        String beerDtoJson = objectMapper.writeValueAsString(sentBeer);
 
         doNothing().when(beerService).update(any(UUID.class), any(BeerDto.class));
 
@@ -102,7 +109,7 @@ public class BeerControllerTest {
     public void test_handleUpdate_RequestBody() throws NoSuchMethodException {
         Method handleUpdate = classUnderTest.getClass().getDeclaredMethod("handleUpdate", UUID.class, BeerDto.class);
         Annotation[][] parameterAnnotations = handleUpdate.getParameterAnnotations();
-        RequestBody annotation = (RequestBody) parameterAnnotations[1][0];
+        RequestBody annotation = (RequestBody) parameterAnnotations[1][1];
         Assert.assertNotNull(annotation);
     }
 
