@@ -1,4 +1,4 @@
-# Udemy - Spring Boot Microservices - Initial Brewery project - Spring MVC Brewery Microservice
+# Udemy - Initial Brewery project - Spring MVC Brewery Microservice
 ## Description
 The current project is part of the "Spring Boot Microservices with Spring Cloud" [Udemy course](https://www.udemy.com/course/spring-boot-microservices-with-spring-cloud-beginner-to-guru/). 
 
